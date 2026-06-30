@@ -1,7 +1,9 @@
+using AI.DocumentIntelligence.Persistence;
 using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
