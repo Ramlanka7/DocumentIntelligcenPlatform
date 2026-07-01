@@ -136,17 +136,40 @@ internal abstract partial class AiServiceBase
 
     // ---- Citation and contract mapping helpers ----
 
-    protected static Citation MapCitation(JsonCitationDto dto) =>
-        new(
-            Guid.TryParse(dto.DocumentId, out var id) ? id : Guid.Empty,
-            dto.DocumentName,
-            dto.PageNumber,
-            dto.ParagraphReference,
-            dto.Snippet,
-            dto.ConfidenceScore);
+    protected static IReadOnlyList<Citation> MapCitations(IEnumerable<JsonCitationDto> dtos)
+    {
+        var citations = new List<Citation>();
 
-    protected static IReadOnlyList<Citation> MapCitations(IEnumerable<JsonCitationDto> dtos) =>
-        dtos.Select(MapCitation).ToList();
+        foreach (var dto in dtos)
+        {
+            if (!Guid.TryParse(dto.DocumentId, out var documentId))
+            {
+                continue;
+            }
+
+            var domainCitation = AI.DocumentIntelligence.Domain.ValueObjects.Citation.Create(
+                documentId,
+                dto.DocumentName,
+                dto.PageNumber,
+                dto.ParagraphReference,
+                dto.Snippet,
+                dto.ConfidenceScore);
+
+            if (domainCitation.IsSuccess)
+            {
+                var c = domainCitation.Value;
+                citations.Add(new Citation(
+                    c.DocumentId,
+                    c.DocumentName,
+                    c.PageNumber,
+                    c.ParagraphReference,
+                    c.Snippet,
+                    c.ConfidenceScore));
+            }
+        }
+
+        return citations;
+    }
 
     protected static KeyFinding MapKeyFinding(JsonKeyFindingDto dto) =>
         new(dto.Title, dto.Detail, MapCitations(dto.Citations));
