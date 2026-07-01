@@ -37,7 +37,7 @@ internal sealed partial class AzureSearchService : ISearchService
     private readonly SearchIndexClient _indexClient;
     private readonly SearchClient _searchClient;
 
-    private bool _indexEnsured;
+    private volatile bool _indexEnsured;
 
     public AzureSearchService(
         IOptions<AzureSearchOptions> options,
@@ -169,42 +169,54 @@ internal sealed partial class AzureSearchService : ISearchService
 
         try
         {
-            // Search for all chunks belonging to this document.
             var filter = $"{FieldDocumentId} eq '{documentId}'";
-            var searchOptions = new SearchOptions
-            {
-                Filter = filter,
-                Select = { FieldId },
-                Size = 1000,
-            };
+            var totalDeleted = 0;
 
-            var response = await _searchClient.SearchAsync<SearchDocument>(null, searchOptions, cancellationToken);
-
-            var ids = new List<string>();
-            await foreach (var result in response.Value.GetResultsAsync())
+            // Page through all matching chunks; a document may have more than MaxDeleteBatchSize chunks.
+            while (true)
             {
-                if (result.Document.TryGetValue(FieldId, out var idObj) && idObj is string id)
+                var searchOptions = new SearchOptions
                 {
-                    ids.Add(id);
+                    Filter = filter,
+                    Select = { FieldId },
+                    Size = _options.MaxDeleteBatchSize,
+                };
+
+                var response = await _searchClient.SearchAsync<SearchDocument>(null, searchOptions, cancellationToken);
+
+                var ids = new List<string>();
+                await foreach (var result in response.Value.GetResultsAsync())
+                {
+                    if (result.Document.TryGetValue(FieldId, out var idObj) && idObj is string id)
+                    {
+                        ids.Add(id);
+                    }
+                }
+
+                if (ids.Count == 0)
+                {
+                    break;
+                }
+
+                var docsToDelete = ids.Select(id =>
+                {
+                    var doc = new SearchDocument();
+                    doc[FieldId] = id;
+                    return doc;
+                }).ToList();
+
+                var batch = IndexDocumentsBatch.Delete(docsToDelete);
+                await _searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
+                totalDeleted += ids.Count;
+
+                // If the page was smaller than the batch size there are no more pages.
+                if (ids.Count < _options.MaxDeleteBatchSize)
+                {
+                    break;
                 }
             }
 
-            if (ids.Count == 0)
-            {
-                return Result.Success();
-            }
-
-            var docsToDelete = ids.Select(id =>
-            {
-                var doc = new SearchDocument();
-                doc[FieldId] = id;
-                return doc;
-            }).ToList();
-
-            var batch = IndexDocumentsBatch.Delete(docsToDelete);
-            await _searchClient.IndexDocumentsAsync(batch, cancellationToken: cancellationToken);
-
-            LogDeleted(_logger, ids.Count, documentId, _options.IndexName);
+            LogDeleted(_logger, totalDeleted, documentId, _options.IndexName);
 
             return Result.Success();
         }

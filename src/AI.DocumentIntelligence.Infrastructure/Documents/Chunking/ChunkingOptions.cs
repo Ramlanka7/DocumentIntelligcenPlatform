@@ -4,7 +4,7 @@ namespace AI.DocumentIntelligence.Infrastructure.Documents.Chunking;
 /// Configuration options for the document chunking strategy. Bound from the
 /// <c>Chunking</c> section of <c>appsettings.json</c>.
 /// </summary>
-public sealed class ChunkingOptions
+internal sealed class ChunkingOptions
 {
     public const string SectionName = "Chunking";
 

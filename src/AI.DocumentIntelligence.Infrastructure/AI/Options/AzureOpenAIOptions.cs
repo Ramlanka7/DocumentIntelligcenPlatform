@@ -4,7 +4,7 @@ namespace AI.DocumentIntelligence.Infrastructure.AI.Options;
 /// Configuration options for Azure OpenAI (Foundry). Bound from the
 /// <c>AzureOpenAI</c> section of <c>appsettings.json</c>.
 /// </summary>
-public sealed class AzureOpenAIOptions
+internal sealed class AzureOpenAIOptions
 {
     public const string SectionName = "AzureOpenAI";
 

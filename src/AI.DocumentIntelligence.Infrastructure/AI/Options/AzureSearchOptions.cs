@@ -4,7 +4,7 @@ namespace AI.DocumentIntelligence.Infrastructure.AI.Options;
 /// Configuration options for Azure AI Search. Bound from the
 /// <c>AzureSearch</c> section of <c>appsettings.json</c>.
 /// </summary>
-public sealed class AzureSearchOptions
+internal sealed class AzureSearchOptions
 {
     public const string SectionName = "AzureSearch";
 
@@ -25,4 +25,10 @@ public sealed class AzureSearchOptions
 
     /// <summary>The vector field dimensionality. Must match <see cref="AzureOpenAIOptions.EmbeddingDimensions"/>.</summary>
     public int VectorDimensions { get; set; } = 1536;
+
+    /// <summary>
+    /// Maximum number of chunk IDs retrieved per page when deleting all chunks for a document.
+    /// Azure AI Search limits a single fetch to 1000; increase pages rather than this value.
+    /// </summary>
+    public int MaxDeleteBatchSize { get; set; } = 1000;
 }
