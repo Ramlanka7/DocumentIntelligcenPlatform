@@ -77,7 +77,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./ui/AI.DocumentIntelligence.UI
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:

@@ -15,7 +15,7 @@ COPY src/AI.DocumentIntelligence.Application/AI.DocumentIntelligence.Application
 COPY src/AI.DocumentIntelligence.Domain/AI.DocumentIntelligence.Domain.csproj src/AI.DocumentIntelligence.Domain/
 COPY src/AI.DocumentIntelligence.Infrastructure/AI.DocumentIntelligence.Infrastructure.csproj src/AI.DocumentIntelligence.Infrastructure/
 COPY src/AI.DocumentIntelligence.Persistence/AI.DocumentIntelligence.Persistence.csproj src/AI.DocumentIntelligence.Persistence/
-COPY src/AI.DocumentIntelligence.Tests/AI.DocumentIntelligence.Tests.csproj src/AI.DocumentIntelligence.Tests/
+COPY tests/AI.DocumentIntelligence.Tests/AI.DocumentIntelligence.Tests.csproj tests/AI.DocumentIntelligence.Tests/
 
 RUN dotnet restore src/AI.DocumentIntelligence.Api/AI.DocumentIntelligence.Api.csproj
 
