@@ -1,0 +1,53 @@
+using AI.DocumentIntelligence.Application.Contracts.AI;
+using AI.DocumentIntelligence.Infrastructure.AI.Providers;
+using FluentAssertions;
+
+namespace AI.DocumentIntelligence.Tests.AiLayer;
+
+public sealed class StubProviderTests
+{
+    private static readonly AiCompletionRequest DummyRequest =
+        new([new AiMessage(AiRole.User, "hello")]);
+
+    [Fact]
+    public void OpenAiProvider_Name_ShouldBeOpenAI()
+    {
+        new OpenAiProvider().Name.Should().Be("OpenAI");
+    }
+
+    [Fact]
+    public async Task OpenAiProvider_CompleteAsync_ShouldReturnFailure()
+    {
+        var result = await new OpenAiProvider().CompleteAsync(DummyRequest);
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("OpenAI.NotConfigured");
+    }
+
+    [Fact]
+    public void AnthropicProvider_Name_ShouldBeAnthropic()
+    {
+        new AnthropicProvider().Name.Should().Be("Anthropic");
+    }
+
+    [Fact]
+    public async Task AnthropicProvider_CompleteAsync_ShouldReturnFailure()
+    {
+        var result = await new AnthropicProvider().CompleteAsync(DummyRequest);
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Anthropic.NotConfigured");
+    }
+
+    [Fact]
+    public void OllamaProvider_Name_ShouldBeOllama()
+    {
+        new OllamaProvider().Name.Should().Be("Ollama");
+    }
+
+    [Fact]
+    public async Task OllamaProvider_CompleteAsync_ShouldReturnFailure()
+    {
+        var result = await new OllamaProvider().CompleteAsync(DummyRequest);
+        result.IsFailure.Should().BeTrue();
+        result.Error.Code.Should().Be("Ollama.NotConfigured");
+    }
+}

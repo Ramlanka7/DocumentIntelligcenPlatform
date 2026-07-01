@@ -23,7 +23,7 @@ Status values: `Not started` · `In progress` · `Blocked` · `Done`
 | T04 | Document processing layer     | T03               | rag-ai-engineer              | Done        |
 | T05 | RAG pipeline                  | T03, T04          | rag-ai-engineer              | Done        |
 | T06 | Auth & security               | T02, T03          | dotnet-backend-engineer      | Done        |
-| T07 | AI service layer              | T03, T05          | rag-ai-engineer              | Not started |
+| T07 | AI service layer              | T03, T05          | rag-ai-engineer              | Done        |
 | T08 | API layer                     | T03, T06, T07     | dotnet-backend-engineer      | Not started |
 | T09 | Frontend foundation           | T00               | angular-frontend-engineer    | Not started |
 | T10 | Analysis feature              | T08, T09          | angular-frontend-engineer    | Not started |
