@@ -127,7 +127,7 @@ internal sealed partial class AzureSearchService : ISearchService
         {
             var searchOptions = BuildSearchOptions(request, queryVector);
             var response = await _searchClient.SearchAsync<SearchDocument>(
-                request.UseHybrid ? request.Query : null,
+                request.UseHybrid ? request.Query : "*",
                 searchOptions,
                 cancellationToken);
 
@@ -182,7 +182,7 @@ internal sealed partial class AzureSearchService : ISearchService
                     Size = _options.MaxDeleteBatchSize,
                 };
 
-                var response = await _searchClient.SearchAsync<SearchDocument>(null, searchOptions, cancellationToken);
+                var response = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions, cancellationToken);
 
                 var ids = new List<string>();
                 await foreach (var result in response.Value.GetResultsAsync())
