@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text.Json;
 using AI.DocumentIntelligence.Application.Abstractions.AI;
 using AI.DocumentIntelligence.Application.Abstractions.Persistence;
