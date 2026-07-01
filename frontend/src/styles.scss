@@ -39,3 +39,24 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Visible focus ring everywhere for keyboard navigation (WCAG AA).
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+// Toast notification variants used by NotificationService.
+.adip-snackbar {
+  &.adip-snackbar-error {
+    --mdc-snackbar-container-color: var(--mat-sys-error-container);
+    --mdc-snackbar-supporting-text-color: var(--mat-sys-on-error-container);
+    --mat-snack-bar-button-color: var(--mat-sys-on-error-container);
+  }
+
+  &.adip-snackbar-info {
+    --mdc-snackbar-container-color: var(--mat-sys-primary-container);
+    --mdc-snackbar-supporting-text-color: var(--mat-sys-on-primary-container);
+    --mat-snack-bar-button-color: var(--mat-sys-on-primary-container);
+  }
+}
