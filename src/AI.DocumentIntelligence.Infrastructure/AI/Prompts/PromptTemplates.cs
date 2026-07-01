@@ -15,10 +15,10 @@ internal static class PromptTemplates
         {
           "documentId": "<guid>",
           "documentName": "<string>",
-          "pageNumber": <int, 1-based>,
+          "pageNumber": "<int, 1-based>",
           "paragraphReference": "<string, e.g. '¶3' or section heading>",
           "snippet": "<verbatim excerpt from source, max 200 chars>",
-          "confidenceScore": <float 0.0-1.0>
+          "confidenceScore": "<float 0.0-1.0>"
         }
         """;
 
