@@ -22,4 +22,10 @@ internal sealed class AzureOpenAIOptions
 
     /// <summary>The expected embedding vector dimensionality (must match the deployment model).</summary>
     public int EmbeddingDimensions { get; set; } = 1536;
+
+    /// <summary>Cost per 1 million prompt/input tokens in USD. Update when Azure pricing changes.</summary>
+    public decimal InputCostPerMillionTokens { get; set; } = 5.0m;
+
+    /// <summary>Cost per 1 million completion/output tokens in USD. Update when Azure pricing changes.</summary>
+    public decimal OutputCostPerMillionTokens { get; set; } = 15.0m;
 }

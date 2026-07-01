@@ -5,13 +5,16 @@ using AI.DocumentIntelligence.Application.Abstractions.Identity;
 using AI.DocumentIntelligence.Application.Abstractions.Search;
 using AI.DocumentIntelligence.Infrastructure.AI.Embedding;
 using AI.DocumentIntelligence.Infrastructure.AI.Options;
+using AI.DocumentIntelligence.Infrastructure.AI.Providers;
 using AI.DocumentIntelligence.Infrastructure.AI.Search;
+using AI.DocumentIntelligence.Infrastructure.AI.Services;
 using AI.DocumentIntelligence.Infrastructure.Auth;
 using AI.DocumentIntelligence.Infrastructure.Documents;
 using AI.DocumentIntelligence.Infrastructure.Documents.Chunking;
 using AI.DocumentIntelligence.Infrastructure.Documents.Processors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace AI.DocumentIntelligence.Infrastructure;
 
@@ -59,6 +62,30 @@ public static class DependencyInjection
             configuration.GetSection(AzureSearchOptions.SectionName));
 
         services.AddSingleton<ISearchService, AzureSearchService>();
+
+        // ---- AI provider selection (T07) ----
+        // Each provider is a keyed singleton so it can be retrieved by name.
+        // To ADD a new provider: (1) implement IAIProvider, (2) add AddKeyedSingleton below.
+        // To SWITCH the active provider: change AI:ProviderName in configuration only — no code change.
+        // Azure.AI.OpenAI ChatClient is thread-safe, so Singleton lifetime is appropriate.
+        services.Configure<AiProviderOptions>(configuration.GetSection(AiProviderOptions.SectionName));
+
+        services.AddKeyedSingleton<IAIProvider, AzureOpenAiProvider>(AzureOpenAiProvider.ProviderName);
+        services.AddKeyedSingleton<IAIProvider, OpenAiProvider>(OpenAiProvider.ProviderName);
+        services.AddKeyedSingleton<IAIProvider, AnthropicProvider>(AnthropicProvider.ProviderName);
+        services.AddKeyedSingleton<IAIProvider, OllamaProvider>(OllamaProvider.ProviderName);
+
+        // Resolve the active provider at first use, based on the configured name.
+        services.AddSingleton<IAIProvider>(sp =>
+        {
+            var opts = sp.GetRequiredService<IOptions<AiProviderOptions>>().Value;
+            return sp.GetRequiredKeyedService<IAIProvider>(opts.ProviderName);
+        });
+
+        // ---- AI services (T07) ----
+        services.AddScoped<IAnalysisService, AnalysisService>();
+        services.AddScoped<IComparisonService, ComparisonService>();
+        services.AddScoped<IChatService, ChatService>();
 
         return services;
     }
