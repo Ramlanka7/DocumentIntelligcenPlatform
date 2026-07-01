@@ -10,6 +10,7 @@ using AI.DocumentIntelligence.Application.Contracts.Search;
 using AI.DocumentIntelligence.Domain.Common;
 using AI.DocumentIntelligence.Domain.Entities;
 using Microsoft.Extensions.Logging;
+using DomainCitation = AI.DocumentIntelligence.Domain.ValueObjects.Citation;
 using DomainTokenUsage = AI.DocumentIntelligence.Domain.ValueObjects.TokenUsage;
 
 namespace AI.DocumentIntelligence.Infrastructure.AI.Services;
@@ -147,7 +148,7 @@ internal abstract partial class AiServiceBase
                 continue;
             }
 
-            var domainCitation = AI.DocumentIntelligence.Domain.ValueObjects.Citation.Create(
+            var domainCitation = DomainCitation.Create(
                 documentId,
                 dto.DocumentName,
                 dto.PageNumber,

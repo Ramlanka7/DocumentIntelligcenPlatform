@@ -16,6 +16,7 @@ public static class DependencyInjection
         // DbContext and migrations are in place.
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IDocumentRepository, DocumentRepository>();
 
         return services;
     }

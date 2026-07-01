@@ -37,6 +37,7 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <!-- 10.x resolves GHSA-v5pm-xwqc-g5wc by pulling Microsoft.OpenApi 3.x -->
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
 
     <!-- Observability -->
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.3" />

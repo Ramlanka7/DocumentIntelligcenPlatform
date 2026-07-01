@@ -3,6 +3,7 @@ using AI.DocumentIntelligence.Application.Abstractions.AI;
 using AI.DocumentIntelligence.Application.Abstractions.Documents;
 using AI.DocumentIntelligence.Application.Abstractions.Identity;
 using AI.DocumentIntelligence.Application.Abstractions.Search;
+using AI.DocumentIntelligence.Application.Abstractions.Storage;
 using AI.DocumentIntelligence.Infrastructure.AI.Embedding;
 using AI.DocumentIntelligence.Infrastructure.AI.Options;
 using AI.DocumentIntelligence.Infrastructure.AI.Providers;
@@ -12,6 +13,7 @@ using AI.DocumentIntelligence.Infrastructure.Auth;
 using AI.DocumentIntelligence.Infrastructure.Documents;
 using AI.DocumentIntelligence.Infrastructure.Documents.Chunking;
 using AI.DocumentIntelligence.Infrastructure.Documents.Processors;
+using AI.DocumentIntelligence.Infrastructure.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -35,6 +37,7 @@ public static class DependencyInjection
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IFileUploadValidator, FileUploadValidator>();
         services.AddScoped<IAuditService, AuditService>();
+        services.AddSingleton<IFileStorage, LocalFileStorage>();
 
         // ---- Document processors (T04) ----
         services.AddTransient<IDocumentProcessor, PdfDocumentProcessor>();
