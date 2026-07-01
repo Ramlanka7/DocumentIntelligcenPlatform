@@ -127,7 +127,7 @@ internal sealed partial class AzureSearchService : ISearchService
         {
             var searchOptions = BuildSearchOptions(request, queryVector);
             var response = await _searchClient.SearchAsync<SearchDocument>(
-                request.UseHybrid ? request.Query : null,
+                request.UseHybrid ? request.Query : "*",
                 searchOptions,
                 cancellationToken);
 
@@ -182,7 +182,7 @@ internal sealed partial class AzureSearchService : ISearchService
                     Size = _options.MaxDeleteBatchSize,
                 };
 
-                var response = await _searchClient.SearchAsync<SearchDocument>(null, searchOptions, cancellationToken);
+                var response = await _searchClient.SearchAsync<SearchDocument>("*", searchOptions, cancellationToken);
 
                 var ids = new List<string>();
                 await foreach (var result in response.Value.GetResultsAsync())
@@ -310,7 +310,12 @@ internal sealed partial class AzureSearchService : ISearchService
                 {
                     IsFilterable = true,
                 },
-                new VectorSearchField(FieldEmbedding, _options.VectorDimensions, "hnsw-profile"),
+                new SearchField(FieldEmbedding, SearchFieldDataType.Collection(SearchFieldDataType.Single))
+                {
+                    IsSearchable = true,
+                    VectorSearchDimensions = _options.VectorDimensions,
+                    VectorSearchProfileName = "hnsw-profile",
+                },
             },
             VectorSearch = new VectorSearch
             {
@@ -389,8 +394,8 @@ internal sealed partial class AzureSearchService : ISearchService
             options.Filter = $"({ids})";
         }
 
-        // Semantic re-ranking is applied on top of hybrid retrieval.
-        if (!string.IsNullOrWhiteSpace(_options.SemanticConfigurationName))
+        // Semantic re-ranking requires a textual query — only apply it for hybrid searches.
+        if (request.UseHybrid && !string.IsNullOrWhiteSpace(_options.SemanticConfigurationName))
         {
             options.QueryType = SearchQueryType.Semantic;
             options.SemanticSearch = new SemanticSearchOptions
