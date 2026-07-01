@@ -2,13 +2,6 @@ using AI.DocumentIntelligence.Domain.Entities;
 
 namespace AI.DocumentIntelligence.Application.Abstractions.Persistence;
 
-/// <summary>Summary totals returned by <see cref="IAiUsageMetricRepository.GetTotalsAsync"/>.</summary>
-public sealed record AiUsageTotals(
-    long TotalPromptTokens,
-    long TotalCompletionTokens,
-    decimal TotalEstimatedCost,
-    double AverageProcessingTimeMs);
-
 /// <summary>Repository for <see cref="AiUsageMetric"/> ledger entries with admin-dashboard queries.</summary>
 public interface IAiUsageMetricRepository : IRepository<AiUsageMetric>
 {

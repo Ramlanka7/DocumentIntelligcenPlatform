@@ -53,32 +53,32 @@ internal sealed class AnalysisSessionConfiguration : IEntityTypeConfiguration<An
             .HasColumnName("updated_at_utc");
 
         // Store private list collections as JSON columns.
-        builder.Property<List<Guid>>("_documentIds")
+        builder.Property<List<Guid>>(AnalysisSessionFieldNames.DocumentIds)
             .HasColumnName("document_ids")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<List<string>>("_keyFindings")
+        builder.Property<List<string>>(AnalysisSessionFieldNames.KeyFindings)
             .HasColumnName("key_findings")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<List<string>>("_risksIdentified")
+        builder.Property<List<string>>(AnalysisSessionFieldNames.RisksIdentified)
             .HasColumnName("risks_identified")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<List<string>>("_recommendations")
+        builder.Property<List<string>>(AnalysisSessionFieldNames.Recommendations)
             .HasColumnName("recommendations")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<List<string>>("_actionItems")
+        builder.Property<List<string>>(AnalysisSessionFieldNames.ActionItems)
             .HasColumnName("action_items")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Property<List<Citation>>("_referencedSources")
+        builder.Property<List<Citation>>(AnalysisSessionFieldNames.ReferencedSources)
             .HasColumnName("referenced_sources")
             .HasColumnType("jsonb")
             .UsePropertyAccessMode(PropertyAccessMode.Field);

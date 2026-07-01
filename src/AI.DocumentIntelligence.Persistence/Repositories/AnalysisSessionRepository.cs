@@ -1,5 +1,6 @@
 using AI.DocumentIntelligence.Application.Abstractions.Persistence;
 using AI.DocumentIntelligence.Domain.Entities;
+using AI.DocumentIntelligence.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace AI.DocumentIntelligence.Persistence.Repositories;
@@ -15,9 +16,8 @@ internal sealed class AnalysisSessionRepository : Repository<AnalysisSession>, I
         Guid documentId,
         CancellationToken cancellationToken = default)
     {
-        // _documentIds is stored as a JSON column; query using the EF field accessor.
         return await DbSet
-            .Where(s => EF.Property<List<Guid>>(s, "_documentIds").Contains(documentId))
+            .Where(s => EF.Property<List<Guid>>(s, AnalysisSessionFieldNames.DocumentIds).Contains(documentId))
             .OrderByDescending(s => s.CreatedAtUtc)
             .ToListAsync(cancellationToken);
     }

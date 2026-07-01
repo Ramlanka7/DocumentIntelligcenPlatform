@@ -8,14 +8,14 @@ namespace AI.DocumentIntelligence.Persistence.Repositories;
 /// Generic EF Core repository implementation backed by <see cref="ApplicationDbContext"/>.
 /// Specific repositories derive from this class to add aggregate-specific queries.
 /// </summary>
-internal class Repository<T> : IRepository<T> where T : BaseEntity
+internal abstract class Repository<T> : IRepository<T> where T : BaseEntity
 {
-    protected readonly ApplicationDbContext Context;
+    private readonly ApplicationDbContext _context;
     protected readonly DbSet<T> DbSet;
 
-    public Repository(ApplicationDbContext context)
+    protected Repository(ApplicationDbContext context)
     {
-        Context = context;
+        _context = context;
         DbSet = context.Set<T>();
     }
 

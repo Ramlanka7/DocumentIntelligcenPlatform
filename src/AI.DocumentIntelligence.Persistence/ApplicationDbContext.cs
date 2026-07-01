@@ -8,7 +8,7 @@ namespace AI.DocumentIntelligence.Persistence;
 /// Applies all entity configurations from the Persistence assembly and enables
 /// the PostgreSQL <c>vector</c> extension for pgvector semantic-search support.
 /// </summary>
-public sealed class ApplicationDbContext : DbContext
+internal sealed class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

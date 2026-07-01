@@ -11,7 +11,7 @@ namespace AI.DocumentIntelligence.Persistence.Seed;
 /// The admin password is read from <c>Seed:AdminPassword</c> in configuration
 /// (user secrets / env override in production — never hardcoded here).
 /// </summary>
-public sealed partial class DataSeeder
+internal sealed partial class DataSeeder
 {
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _configuration;

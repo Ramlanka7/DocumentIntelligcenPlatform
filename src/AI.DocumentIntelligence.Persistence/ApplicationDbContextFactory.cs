@@ -13,11 +13,11 @@ internal sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-        // Design-time connection string. The actual runtime string comes from appsettings.json /
-        // user-secrets / environment variables resolved by the DI container.
-        optionsBuilder.UseNpgsql(
-            "Host=localhost;Port=5432;Database=documentintelligence;Username=postgres;Password=postgres",
-            npgsql => npgsql.UseVector());
+        // Design-time connection: read from env (set DB_CONNECTION for CI/CD) or fall back to local dev defaults.
+        var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION")
+            ?? "Host=localhost;Port=5432;Database=documentintelligence;Username=postgres;Password=postgres";
+
+        optionsBuilder.UseNpgsql(connectionString, npgsql => npgsql.UseVector());
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }

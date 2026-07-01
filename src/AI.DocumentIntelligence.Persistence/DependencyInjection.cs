@@ -38,4 +38,15 @@ public static class DependencyInjection
 
         return services;
     }
+
+    /// <summary>
+    /// Applies pending EF Core migrations and seeds default data.
+    /// Call from the Api composition root after <c>app.Build()</c>.
+    /// </summary>
+    public static async Task InitialiseDatabaseAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+        await seeder.SeedAsync(cancellationToken);
+    }
 }
